@@ -1,4 +1,3 @@
 .aws-sam
 build
-coverage
 node_modules

@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  pulpo-bc-openaid-api
+
+  AWS SAM Business case project with Openaid API integration
+
+Globals:
+  Function:
+    Runtime: nodejs12.x
+    Timeout: 300
+
+Resources:
+  ContributionsListFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/contributions
+      Handler: contributions-list.handler
+      Description: >-
+        A Lambda function that returns a list of humanitarian contributions to Sudan.
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      Events:
+        ContributionsList:
+          Type: Api
+          Properties:
+            Path: /openaid/contributions
+            Method: get
+
+Outputs:
+  ContributionsListApi:
+    Description: 'API Gateway endpoint URL for Prod stage for ContributionsList function'
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/openaid/contributions/'

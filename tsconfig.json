@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "alwaysStrict": true,
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "target": "es2019",
+    "baseUrl": "./src",
+    "paths" : {
+      "@interfaces/*" : ["interfaces/*"],
+      "@services/*" : ["services/*"]
+    }
+  }
+}

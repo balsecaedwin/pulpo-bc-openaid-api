@@ -3,11 +3,10 @@
 This project contains source code and supporting files for a serverless application that you can deploy with the AWS Serverless Application Model (AWS SAM) command line interface (CLI). It includes the following files and folders:
 
 - `src` - Code for the application's Lambda function.
-- `events` - Invocation events that you can use to invoke the function.
 - `__tests__` - Unit tests for the application code. 
-- `template.yml` - A template that defines the application's AWS resources.
+- `template.yaml` - A template that defines the application's AWS resources.
 
-Resources for this project are defined in the `template.yml` file in this project. You can update the template to add AWS resources through the same deployment process that updates your application code.
+Resources for this project are defined in the `template.yaml` file in this project. You can update the template to add AWS resources through the same deployment process that updates your application code.
 
 If you prefer to use an integrated development environment (IDE) to build and test your application, you can use the AWS Toolkit.  
 The AWS Toolkit is an open-source plugin for popular IDEs that uses the AWS SAM CLI to build and deploy serverless applications on AWS. The AWS Toolkit also adds step-through debugging for Lambda function code. 
@@ -33,17 +32,16 @@ The AWS SAM CLI is an extension of the AWS CLI that adds functionality for build
 To use the AWS SAM CLI, you need the following tools:
 
 * AWS SAM CLI - [Install the AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html).
-* Node.js - [Install Node.js 14](https://nodejs.org/en/), including the npm package management tool.
+* Node.js - [Install Node.js 12](https://nodejs.org/en/), including the npm package management tool.
 * Docker - [Install Docker community edition](https://hub.docker.com/search/?type=edition&offering=community).
 
-To build and deploy your application for the first time, run the following in your shell:
+To deploy your application for the first time, run the following in your shell:
 
 ```bash
-sam build
 sam deploy --guided
 ```
 
-The first command will build the source of your application. The second command will package and deploy your application to AWS, with a series of prompts:
+The provided command will package and deploy your application to AWS, with a series of prompts:
 
 * **Stack Name**: The name of the stack to deploy to CloudFormation. This should be unique to your account and region, and a good starting point would be something matching your project name.
 * **AWS Region**: The AWS region you want to deploy your app to.
@@ -51,36 +49,27 @@ The first command will build the source of your application. The second command 
 * **Allow SAM CLI IAM role creation**: Many AWS SAM templates, including this example, create AWS IAM roles required for the AWS Lambda function(s) included to access AWS services. By default, these are scoped down to minimum required permissions. To deploy an AWS CloudFormation stack which creates or modifies IAM roles, the `CAPABILITY_IAM` value for `capabilities` must be provided. If permission isn't provided through this prompt, to deploy this example you must explicitly pass `--capabilities CAPABILITY_IAM` to the `sam deploy` command.
 * **Save arguments to samconfig.toml**: If set to yes, your choices will be saved to a configuration file inside the project, so that in the future you can just re-run `sam deploy` without parameters to deploy changes to your application.
 
-## Use the AWS SAM CLI to build and test locally
+## Use the AWS SAM CLI to test locally
 
-Build your application by using the `sam build` command.
-
-```bash
-pulpo-bc-openaid-api$ sam build
-pulpo-bc-openaid-api$ sam build -t template.yml
-```
-
-The AWS SAM CLI installs dependencies that are defined in `package.json`, creates a deployment package, and saves it in the `.aws-sam/build` folder.
-
-Test a single function by invoking it directly with a test event. An event is a JSON document that represents the input that the function receives from the event source. Test events are included in the `events` folder in this project.
+Test a single function by invoking it directly with a test event. An event is a JSON document that represents the input that the function receives from the event source.
 
 Run functions locally and invoke them with the `sam local invoke` command.
 
 ```bash
-pulpo-bc-openaid-api$ sam local invoke helloFromLambdaFunction --no-event
+pulpo-bc-openaid-api$ sam local invoke helloLambdaFunction --no-event
 ```
 
 Run the following command to start sam local api.
 
 ```bash
-pulpo-bc-openaid-api$ sam local start-api -t template.yml
+pulpo-bc-openaid-api$ sam local start-api -t template.yaml
 ```
 
 ## Add a resource to your application
 
 The application template uses AWS SAM to define application resources. AWS SAM is an extension of AWS CloudFormation with a simpler syntax for configuring common serverless application resources, such as functions, triggers, and APIs. For resources that aren't included in the [AWS SAM specification](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md), you can use the standard [AWS CloudFormation resource types](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html).
 
-Update `template.yml` to add a dead-letter queue to your application. In the **Resources** section, add a resource named **MyQueue** with the type **AWS::SQS::Queue**. Then add a property to the **AWS::Serverless::Function** resource named **DeadLetterQueue** that targets the queue's Amazon Resource Name (ARN), and a policy that grants the function permission to access the queue.
+Update `template.yaml` to add a dead-letter queue to your application. In the **Resources** section, add a resource named **MyQueue** with the type **AWS::SQS::Queue**. Then add a property to the **AWS::Serverless::Function** resource named **DeadLetterQueue** that targets the queue's Amazon Resource Name (ARN), and a policy that grants the function permission to access the queue.
 
 ```
 Resources:
@@ -101,7 +90,7 @@ Resources:
 
 The dead-letter queue is a location for Lambda to send events that could not be processed. It's only used if you invoke your function asynchronously, but it's useful here to show how you can modify your application's resources and function configuration.
 
-Deploy the updated application.
+## Deploy the updated application.
 
 ```bash
 pulpo-bc-openaid-api$ sam deploy
@@ -145,3 +134,15 @@ aws cloudformation delete-stack --stack-name pulpo-bc-openaid-api
 For an introduction to the AWS SAM specification, the AWS SAM CLI, and serverless application concepts, see the [AWS SAM Developer Guide](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html).
 
 Next, you can use the AWS Serverless Application Repository to deploy ready-to-use apps that go beyond Hello World samples and learn how authors developed their applications. For more information, see the [AWS Serverless Application Repository main page](https://aws.amazon.com/serverless/serverlessrepo/) and the [AWS Serverless Application Repository Developer Guide](https://docs.aws.amazon.com/serverlessrepo/latest/devguide/what-is-serverlessrepo.html).
+
+## Useful commands
+
+* `npm install` first
+* `npm run build` to create bundles
+* `npm run watch` to build on change
+* `npm run lint` to check code style
+* `npm test` to do just that
+* `sam validate` to check your template
+* `sam local start-api` to run it locally
+* `sam deploy --guided` for your first deploy
+* `sam deploy` thereafter
